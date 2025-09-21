@@ -5,9 +5,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 1,
     name: 'The Fool',
-    arcana: 'Major',
+    arcana: 'major',
     number: 0,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'New beginnings, innocence, spontaneity',
       keywords: ['adventure', 'freedom', 'new journey', 'optimism'],
@@ -22,9 +22,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 2,
     name: 'The Magician',
-    arcana: 'Major',
+    arcana: 'major',
     number: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Manifestation, resourcefulness, power',
       keywords: ['willpower', 'desire', 'creation', 'manifestation'],
@@ -39,9 +39,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 3,
     name: 'The High Priestess',
-    arcana: 'Major',
+    arcana: 'major',
     number: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Intuition, sacred knowledge, divine feminine',
       keywords: ['intuition', 'mystery', 'subconscious', 'inner wisdom'],
@@ -56,9 +56,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 4,
     name: 'The Empress',
-    arcana: 'Major',
+    arcana: 'major',
     number: 3,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Femininity, beauty, nature, abundance',
       keywords: ['motherhood', 'fertility', 'sensuality', 'creativity'],
@@ -73,9 +73,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 5,
     name: 'The Emperor',
-    arcana: 'Major',
+    arcana: 'major',
     number: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Authority, establishment, structure, father figure',
       keywords: ['leadership', 'authority', 'structure', 'control'],
@@ -90,9 +90,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 6,
     name: 'The Hierophant',
-    arcana: 'Major',
+    arcana: 'major',
     number: 5,
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Spiritual wisdom, religious beliefs, conformity',
       keywords: ['tradition', 'conformity', 'morality', 'ethics'],
@@ -107,9 +107,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 7,
     name: 'The Lovers',
-    arcana: 'Major',
+    arcana: 'major',
     number: 6,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Love, harmony, relationships, values alignment',
       keywords: ['love', 'union', 'relationships', 'choices'],
@@ -124,9 +124,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 8,
     name: 'The Chariot',
-    arcana: 'Major',
+    arcana: 'major',
     number: 7,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Control, willpower, success, determination',
       keywords: ['control', 'willpower', 'success', 'determination'],
@@ -141,9 +141,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 9,
     name: 'Strength',
-    arcana: 'Major',
+    arcana: 'major',
     number: 8,
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Strength, courage, persuasion, influence',
       keywords: ['inner strength', 'bravery', 'compassion', 'focus'],
@@ -158,9 +158,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 10,
     name: 'The Hermit',
-    arcana: 'Major',
+    arcana: 'major',
     number: 9,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Soul searching, introspection, inner guidance',
       keywords: ['introspection', 'searching', 'guidance', 'solitude'],
@@ -175,9 +175,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 11,
     name: 'Wheel of Fortune',
-    arcana: 'Major',
+    arcana: 'major',
     number: 10,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Good luck, karma, life cycles, destiny',
       keywords: ['fate', 'destiny', 'change', 'cycles'],
@@ -192,9 +192,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 12,
     name: 'Justice',
-    arcana: 'Major',
+    arcana: 'major',
     number: 11,
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Justice, fairness, truth, cause and effect',
       keywords: ['justice', 'fairness', 'truth', 'law'],
@@ -209,9 +209,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 13,
     name: 'The Hanged Man',
-    arcana: 'Major',
+    arcana: 'major',
     number: 12,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Suspension, restriction, letting go',
       keywords: ['waiting', 'suspension', 'restriction', 'sacrifice'],
@@ -226,9 +226,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 14,
     name: 'Death',
-    arcana: 'Major',
+    arcana: 'major',
     number: 13,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Endings, beginnings, change, transformation',
       keywords: ['transformation', 'transition', 'change', 'rebirth'],
@@ -243,9 +243,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 15,
     name: 'Temperance',
-    arcana: 'Major',
+    arcana: 'major',
     number: 14,
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Balance, moderation, patience, purpose',
       keywords: ['balance', 'moderation', 'patience', 'harmony'],
@@ -260,9 +260,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 16,
     name: 'The Devil',
-    arcana: 'Major',
+    arcana: 'major',
     number: 15,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Bondage, addiction, sexuality, materialism',
       keywords: ['bondage', 'addiction', 'restriction', 'materialism'],
@@ -277,9 +277,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 17,
     name: 'The Tower',
-    arcana: 'Major',
+    arcana: 'major',
     number: 16,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Sudden change, upheaval, chaos, revelation',
       keywords: ['upheaval', 'chaos', 'sudden change', 'revelation'],
@@ -294,9 +294,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 18,
     name: 'The Star',
-    arcana: 'Major',
+    arcana: 'major',
     number: 17,
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Hope, faith, purpose, renewal, spirituality',
       keywords: ['hope', 'faith', 'purpose', 'renewal'],
@@ -311,9 +311,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 19,
     name: 'The Moon',
-    arcana: 'Major',
+    arcana: 'major',
     number: 18,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Illusion, fear, anxiety, subconscious, intuition',
       keywords: ['illusion', 'fear', 'anxiety', 'intuition'],
@@ -328,9 +328,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 20,
     name: 'The Sun',
-    arcana: 'Major',
+    arcana: 'major',
     number: 19,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Positivity, fun, warmth, success, vitality',
       keywords: ['positivity', 'fun', 'warmth', 'success'],
@@ -345,9 +345,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 21,
     name: 'Judgement',
-    arcana: 'Major',
+    arcana: 'major',
     number: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c6893db9-fdd8-4c6d-818c-737415a6d312.png'),
     upright: {
       meaning: 'Judgement, rebirth, inner calling, absolution',
       keywords: ['judgement', 'rebirth', 'inner calling', 'forgiveness'],
@@ -362,9 +362,9 @@ export const tarotCards: TarotCard[] = [
   {
     id: 22,
     name: 'The World',
-    arcana: 'Major',
+    arcana: 'major',
     number: 21,
-    imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop',
+    imageUrl: require('../assets/images/c12851d6-cf50-4c31-b596-a6f329451423.png'),
     upright: {
       meaning: 'Completion, accomplishment, travel, fulfillment',
       keywords: ['completion', 'accomplishment', 'fulfillment', 'success'],

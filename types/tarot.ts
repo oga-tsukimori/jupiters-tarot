@@ -15,7 +15,7 @@ export interface TarotCard {
     description: string;
     keywords: string[];
   };
-  imageUrl: string;
+  imageUrl: any; // Changed to any to support require() imports
 }
 
 export interface TarotReading {
@@ -31,6 +31,7 @@ export interface DrawnCard {
   card: TarotCard;
   position: string;
   isReversed: boolean;
+  isRevealed?: boolean; // Added this property
 }
 
 export type SpreadType = 'single' | 'three-card' | 'celtic-cross';

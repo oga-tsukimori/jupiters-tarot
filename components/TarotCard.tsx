@@ -157,7 +157,7 @@ export default function TarotCard({
               ]}
             />
             
-            <View style={[styles.imageContainer, isReversed && styles.reversed]}>
+            <View style={[styles.imageContainer, isReversed && styles.imageReversed]}>
               <Image 
                 source={{ uri: card.imageUrl }} 
                 style={styles.cardImage}
@@ -165,6 +165,7 @@ export default function TarotCard({
               />
             </View>
             
+            {/* Text container - always upright */}
             <View style={styles.cardInfo}>
               <Text style={styles.cardName} numberOfLines={2}>
                 {card.name}
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     zIndex: 2,
   },
-  reversed: {
+  imageReversed: {
     transform: [{ rotate: '180deg' }],
   },
   cardImage: {
@@ -272,6 +273,7 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: colors.card,
     zIndex: 2,
+    // Text container is always upright - no transform applied
   },
   cardName: {
     fontSize: 13,

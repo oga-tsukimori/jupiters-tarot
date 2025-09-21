@@ -56,6 +56,28 @@ export default function SpreadSelector({ onSelectSpread }: SpreadSelectorProps) 
     }
   };
 
+  const getDifficultyStyle = (spreadType: SpreadType) => {
+    const color = getDifficultyColor(spreadType);
+    return {
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      borderColor: color,
+      paddingHorizontal: 12,
+      paddingVertical: 4,
+      borderRadius: 12,
+    };
+  };
+
+  const getDifficultyTextStyle = (spreadType: SpreadType) => {
+    const color = getDifficultyColor(spreadType);
+    return {
+      fontSize: 12,
+      fontWeight: '600' as const,
+      color: color,
+      fontFamily: 'Inter_600SemiBold',
+    };
+  };
+
   return (
     <ScrollView 
       style={styles.container}
@@ -78,8 +100,8 @@ export default function SpreadSelector({ onSelectSpread }: SpreadSelectorProps) 
                   color={colors.accent} 
                 />
               </View>
-              <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(key as SpreadType) }]}>
-                <Text style={styles.difficultyText}>
+              <View style={getDifficultyStyle(key as SpreadType)}>
+                <Text style={getDifficultyTextStyle(key as SpreadType)}>
                   {getSpreadDifficulty(key as SpreadType)}
                 </Text>
               </View>
@@ -147,17 +169,6 @@ const styles = StyleSheet.create({
     borderColor: colors.glassBorder,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  difficultyBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  difficultyText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.primary,
-    fontFamily: 'Inter_600SemiBold',
   },
   spreadName: {
     fontSize: 20,

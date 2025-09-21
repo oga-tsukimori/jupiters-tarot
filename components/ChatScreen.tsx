@@ -95,6 +95,24 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
   const generateTarotResponseWithShuffle = (userMessage: string, reading?: { spread: SpreadType; cards: DrawnCard[] }): string => {
     console.log('Generating response with card shuffle for:', userMessage);
     
+    // Check for time-specific questions
+    const timeKeywords = {
+      months: ['month', 'months'],
+      days: ['day', 'days'],
+      hours: ['hour', 'hours'],
+      minutes: ['minute', 'minutes'],
+      weeks: ['week', 'weeks'],
+      years: ['year', 'years']
+    };
+
+    const hasTimeQuestion = Object.entries(timeKeywords).some(([unit, keywords]) => 
+      keywords.some(keyword => userMessage.includes(keyword))
+    );
+
+    if (hasTimeQuestion) {
+      return generateTimeSpecificResponse(userMessage);
+    }
+    
     // Shuffle cards and draw new ones for the answer
     const shuffledCards = getRandomCards(3); // Draw 3 cards for the answer
     const drawnCards: DrawnCard[] = shuffledCards.map((card, index) => ({
@@ -160,6 +178,25 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     ];
     
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+  };
+
+  const generateTimeSpecificResponse = (userMessage: string): string => {
+    // Generate random but consistent time predictions
+    const months = Math.floor(Math.random() * 12) + 1;
+    const days = Math.floor(Math.random() * 30) + 1;
+    const hours = Math.floor(Math.random() * 24) + 1;
+    const minutes = Math.floor(Math.random() * 60) + 1;
+    const weeks = Math.floor(Math.random() * 52) + 1;
+
+    const timeResponses = [
+      `🕰️ Jupiter's cosmic clock reveals divine timing for your question...\n\n⏰ **Months**: ${months} months of transformation await you\n📅 **Days**: Within ${days} days, significant shifts will occur\n🌅 **Hours**: The next ${hours} hours hold special energy\n⚡ **Minutes**: Pay attention to the next ${minutes} minutes - synchronicities are coming\n\n🌟 Time flows differently in the spiritual realm, dear seeker. These numbers carry vibrational significance that will resonate when the moment is right. Trust in Jupiter's perfect timing. ✨`,
+      
+      `⏳ The sands of time whisper Jupiter's sacred measurements...\n\n🌙 **${months} Months**: A complete cycle of growth and renewal\n☀️ **${days} Days**: The sun will rise and set ${days} times before clarity emerges\n⭐ **${hours} Hours**: Within ${hours} hours, the universe will send you a sign\n💫 **${minutes} Minutes**: In exactly ${minutes} minutes, take a deep breath and set your intention\n\n🔮 Remember, beautiful soul, divine timing is not about rushing but about alignment. Each moment unfolds perfectly in Jupiter's grand design. 🌟`,
+      
+      `🌌 Jupiter's temporal wisdom flows through the cosmic currents...\n\n📆 **Months**: ${months} lunar cycles will guide your journey\n🌅 **Days**: ${days} sunrises will illuminate your path\n🕐 **Hours**: ${hours} hours of focused intention will manifest miracles\n⚡ **Minutes**: ${minutes} minutes of meditation will bring clarity\n\n✨ Time is but an illusion, precious seeker. What matters is not when, but how ready your soul is to receive Jupiter's blessings. Trust the process and embrace each moment. 🙏💖`
+    ];
+
+    return timeResponses[Math.floor(Math.random() * timeResponses.length)];
   };
 
   const generateLoveInterpretation = (cards: DrawnCard[]): string => {
@@ -284,7 +321,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
 
   const renderSend = (props: any) => {
     return (
-      <Send {...props}>
+      <Send {...props} containerStyle={styles.sendContainer}>
         <View style={styles.sendButton}>
           <Ionicons name="send" size={22} color={colors.text} />
         </View>
@@ -307,9 +344,9 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
             <Text style={styles.headerTitle}>Jupiter's Oracle</Text>
             <Text style={styles.headerSubtitle}>Cosmic Guidance</Text>
           </View>
-          <View style={styles.headerIcon}>
-            <Text style={styles.crystalBall}>🔮</Text>
-          </View>
+          <TouchableOpacity style={styles.headerIcon}>
+            <Ionicons name="eye" size={26} color={colors.accent} />
+          </TouchableOpacity>
         </View>
 
         {/* Chat History Button */}
@@ -384,9 +421,6 @@ const styles = StyleSheet.create({
   headerIcon: {
     padding: 10,
   },
-  crystalBall: {
-    fontSize: 28,
-  },
   historyButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -421,6 +455,7 @@ const styles = StyleSheet.create({
   },
   inputPrimary: {
     alignItems: 'center',
+    flexDirection: 'row',
   },
   textInput: {
     color: colors.chatInputText,
@@ -429,6 +464,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     lineHeight: 24,
+    flex: 1,
+  },
+  sendContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+    marginBottom: 8,
   },
   sendButton: {
     backgroundColor: colors.accent,
@@ -437,8 +479,6 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 8,
-    marginBottom: 8,
     boxShadow: '0px 4px 12px rgba(255, 110, 199, 0.4)',
     elevation: 6,
   },
