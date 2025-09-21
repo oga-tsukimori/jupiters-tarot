@@ -35,14 +35,14 @@ export default function TarotApp() {
     return (
       <SafeAreaView style={commonStyles.container}>
         <View style={commonStyles.centerContent}>
-          <Text style={commonStyles.text}>Loading...</Text>
+          <Text style={commonStyles.text}>Loading Jupiter's wisdom...</Text>
         </View>
       </SafeAreaView>
     );
   }
 
   const handleStartReading = () => {
-    console.log('Starting tarot reading');
+    console.log('Starting Jupiter\'s tarot reading');
     setAppState('spreads');
   };
 
@@ -64,7 +64,7 @@ export default function TarotApp() {
   };
 
   const handleOpenChat = () => {
-    console.log('Opening chat');
+    console.log('Opening Jupiter\'s Oracle chat');
     setAppState('chat');
   };
 
@@ -91,7 +91,7 @@ export default function TarotApp() {
         onPress={handleOpenChat}
         activeOpacity={0.8}
       >
-        <Ionicons name="chatbubble-ellipses" size={24} color={colors.text} />
+        <Ionicons name="chatbubble-ellipses" size={28} color={colors.text} />
       </TouchableOpacity>
     );
   };
@@ -104,31 +104,36 @@ export default function TarotApp() {
       <SafeAreaView style={commonStyles.container}>
         <View style={commonStyles.centerContent}>
           <View style={styles.welcomeContent}>
-            <Text style={styles.appTitle}>✨ Mystic Tarot ✨</Text>
+            <Text style={styles.appTitle}>✨ Jupiter's Tarot ✨</Text>
             <Text style={styles.appSubtitle}>
-              Discover the wisdom of the cards
+              Discover cosmic wisdom through the ancient cards
             </Text>
             
             <View style={styles.mysticalSymbols}>
               <Text style={styles.symbol}>🌙</Text>
               <Text style={styles.symbol}>🔮</Text>
               <Text style={styles.symbol}>⭐</Text>
+              <Text style={styles.symbol}>🪐</Text>
             </View>
 
-            <View style={[glassStyles.container, styles.welcomeCard]}>
+            <View style={[glassStyles.iosBlur, styles.welcomeCard]}>
               <Text style={styles.welcomeText}>
-                Welcome to your personal tarot reading experience. 
-                Let the ancient wisdom guide your path forward through the mystical realm of cards.
+                Welcome to Jupiter's mystical realm, where ancient wisdom meets cosmic guidance. 
+                Let the planetary energies and sacred cards illuminate your path through the universe's infinite mysteries.
               </Text>
             </View>
 
             <Button
-              text="Begin Your Journey"
+              text="Begin Your Cosmic Journey"
               onPress={handleStartReading}
               variant="primary"
               size="large"
               style={styles.startButton}
             />
+            
+            <View style={styles.jupiterInfo}>
+              <Text style={styles.jupiterText}>🪐 Guided by Jupiter's Wisdom 🪐</Text>
+            </View>
           </View>
         </View>
       </SafeAreaView>
@@ -141,14 +146,17 @@ export default function TarotApp() {
       style={styles.gradientContainer}
     >
       <SafeAreaView style={commonStyles.container}>
-        <View style={[glassStyles.overlay, styles.spreadsHeader]}>
+        <View style={[glassStyles.iosBlur, styles.spreadsHeader]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={handleBackToWelcome}
           >
-            <Ionicons name="arrow-back" size={24} color={colors.accent} />
+            <Ionicons name="arrow-back" size={26} color={colors.accent} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Choose Your Spread</Text>
+          <View style={styles.headerCenter}>
+            <Text style={styles.headerTitle}>Choose Your Cosmic Spread</Text>
+            <Text style={styles.headerSubtitle}>Select your path to wisdom</Text>
+          </View>
           <View style={styles.placeholder} />
         </View>
         <SpreadSelector onSelectSpread={handleSelectSpread} />
@@ -200,72 +208,103 @@ const styles = StyleSheet.create({
   },
   welcomeContent: {
     alignItems: 'center',
-    paddingHorizontal: 32,
-    maxWidth: 400,
+    paddingHorizontal: 36,
+    maxWidth: 420,
   },
   appTitle: {
-    fontSize: 48,
+    fontSize: 52,
     fontWeight: '300',
     color: colors.text,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
     fontFamily: 'CormorantGaramond_400Regular',
-    letterSpacing: 2,
+    letterSpacing: 3,
+    textShadowColor: colors.accent,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8,
   },
   appSubtitle: {
-    fontSize: 18,
+    fontSize: 20,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 36,
     fontFamily: 'Inter_400Regular',
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
   },
   mysticalSymbols: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 32,
-    gap: 24,
+    marginBottom: 36,
+    gap: 28,
   },
   symbol: {
-    fontSize: 32,
+    fontSize: 36,
     opacity: 0.9,
+    textShadowColor: colors.gold,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 6,
   },
   welcomeCard: {
-    marginBottom: 32,
+    marginBottom: 36,
     width: '100%',
+    padding: 28,
   },
   welcomeText: {
-    fontSize: 16,
+    fontSize: 18,
     color: colors.text,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 28,
     fontFamily: 'Inter_400Regular',
+    letterSpacing: 0.5,
   },
   startButton: {
-    marginBottom: 16,
-    minWidth: 200,
+    marginBottom: 24,
+    minWidth: 240,
+  },
+  jupiterInfo: {
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  jupiterText: {
+    fontSize: 16,
+    color: colors.accent,
+    fontFamily: 'CormorantGaramond_600SemiBold',
+    letterSpacing: 1,
+    textShadowColor: colors.primary,
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   spreadsHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    marginHorizontal: 20,
+    marginTop: 12,
+    marginBottom: 20,
   },
   backButton: {
-    padding: 8,
+    padding: 10,
+  },
+  headerCenter: {
+    alignItems: 'center',
+    flex: 1,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
     color: colors.text,
     fontFamily: 'CormorantGaramond_600SemiBold',
   },
+  headerSubtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    fontFamily: 'Inter_400Regular',
+    marginTop: 2,
+  },
   placeholder: {
-    width: 40,
+    width: 46,
   },
 });

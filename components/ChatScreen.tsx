@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { GiftedChat, IMessage, Bubble, InputToolbar, Send } from 'react-native-gifted-chat';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,30 +17,58 @@ interface ChatScreenProps {
   };
 }
 
+interface ChatHistory {
+  messages: IMessage[];
+  timestamp: string;
+}
+
 export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) {
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
 
   useEffect(() => {
     console.log('ChatScreen mounted with reading:', currentReading);
+    
+    // Load chat history from storage (simulated)
+    loadChatHistory();
+    
     setMessages([
       {
         _id: 1,
         text: currentReading 
-          ? `I can see you've drawn cards for a ${currentReading.spread} reading. What would you like to know about your cards? ✨`
-          : 'Welcome to your mystical chat! Ask me anything about tarot, your readings, or seek guidance from the cards. 🔮✨',
+          ? `Welcome back to Jupiter's mystical realm! ✨ I can see you've drawn cards for a ${currentReading.spread} reading. What cosmic wisdom do you seek about your cards? 🔮`
+          : 'Welcome to Jupiter\'s Tarot sanctuary! 🌟 I am your mystical guide through the cosmic energies. Ask me anything about tarot, seek guidance from the stars, or let me shuffle the cards to reveal your destiny. ✨🔮',
         createdAt: new Date(),
         user: {
           _id: 2,
-          name: 'Mystic Guide',
+          name: 'Jupiter\'s Oracle',
           avatar: '🔮',
         },
       },
     ]);
   }, [currentReading]);
 
+  const loadChatHistory = () => {
+    // Simulated chat history loading
+    console.log('Loading chat history...');
+    // In a real app, you would load from AsyncStorage or a database
+  };
+
+  const saveChatHistory = (newMessages: IMessage[]) => {
+    const historyEntry: ChatHistory = {
+      messages: newMessages,
+      timestamp: new Date().toISOString(),
+    };
+    setChatHistory(prev => [...prev, historyEntry]);
+    console.log('Chat history saved:', historyEntry);
+    // In a real app, you would save to AsyncStorage or a database
+  };
+
   const onSend = useCallback((newMessages: IMessage[] = []) => {
     console.log('Sending message:', newMessages[0].text);
-    setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages));
+    const updatedMessages = GiftedChat.append(messages, newMessages);
+    setMessages(updatedMessages);
+    saveChatHistory(updatedMessages);
     
     // Generate AI response with card shuffling
     setTimeout(() => {
@@ -53,14 +81,16 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
         createdAt: new Date(),
         user: {
           _id: 2,
-          name: 'Mystic Guide',
+          name: 'Jupiter\'s Oracle',
           avatar: '🔮',
         },
       };
       
-      setMessages(previousMessages => GiftedChat.append(previousMessages, [botMessage]));
-    }, 1000 + Math.random() * 2000); // Random delay for more natural feel
-  }, [currentReading]);
+      const finalMessages = GiftedChat.append(updatedMessages, [botMessage]);
+      setMessages(finalMessages);
+      saveChatHistory(finalMessages);
+    }, 1200 + Math.random() * 2000); // Random delay for more natural feel
+  }, [messages, currentReading]);
 
   const generateTarotResponseWithShuffle = (userMessage: string, reading?: { spread: SpreadType; cards: DrawnCard[] }): string => {
     console.log('Generating response with card shuffle for:', userMessage);
@@ -69,16 +99,17 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     const shuffledCards = getRandomCards(3); // Draw 3 cards for the answer
     const drawnCards: DrawnCard[] = shuffledCards.map((card, index) => ({
       card,
-      position: ['Past/Situation', 'Present/Action', 'Future/Outcome'][index],
+      position: ['Past/Foundation', 'Present/Energy', 'Future/Outcome'][index],
+      isRevealed: true,
       isReversed: Math.random() < 0.3, // 30% chance of reversed
     }));
 
     // Keywords for different types of questions
-    const loveKeywords = ['love', 'relationship', 'romance', 'partner', 'heart', 'dating', 'crush', 'marriage'];
-    const careerKeywords = ['career', 'job', 'work', 'money', 'finance', 'business', 'success', 'promotion'];
-    const spiritualKeywords = ['spiritual', 'growth', 'meditation', 'chakra', 'energy', 'soul', 'purpose', 'enlightenment'];
-    const futureKeywords = ['future', 'tomorrow', 'next', 'will', 'going to', 'predict', 'what happens'];
-    const generalKeywords = ['help', 'advice', 'guidance', 'what should', 'how can', 'tell me'];
+    const loveKeywords = ['love', 'relationship', 'romance', 'partner', 'heart', 'dating', 'crush', 'marriage', 'soulmate'];
+    const careerKeywords = ['career', 'job', 'work', 'money', 'finance', 'business', 'success', 'promotion', 'wealth'];
+    const spiritualKeywords = ['spiritual', 'growth', 'meditation', 'chakra', 'energy', 'soul', 'purpose', 'enlightenment', 'awakening'];
+    const futureKeywords = ['future', 'tomorrow', 'next', 'will', 'going to', 'predict', 'what happens', 'destiny'];
+    const generalKeywords = ['help', 'advice', 'guidance', 'what should', 'how can', 'tell me', 'show me'];
     
     const isLoveQuestion = loveKeywords.some(keyword => userMessage.includes(keyword));
     const isCareerQuestion = careerKeywords.some(keyword => userMessage.includes(keyword));
@@ -86,43 +117,46 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     const isFutureQuestion = futureKeywords.some(keyword => userMessage.includes(keyword));
     const isGeneralQuestion = generalKeywords.some(keyword => userMessage.includes(keyword));
 
-    // Create the card spread description
-    const cardSpreadText = `\n\n🃏 The cards have been shuffled and speak:\n\n` +
-      `🌙 ${drawnCards[0].position}: ${drawnCards[0].card.name}${drawnCards[0].isReversed ? ' (Reversed)' : ''}\n` +
-      `✨ ${drawnCards[1].position}: ${drawnCards[1].card.name}${drawnCards[1].isReversed ? ' (Reversed)' : ''}\n` +
-      `⭐ ${drawnCards[2].position}: ${drawnCards[2].card.name}${drawnCards[2].isReversed ? ' (Reversed)' : ''}`;
+    // Create the card spread description with enhanced formatting
+    const cardSpreadText = `\n\n🃏 ✨ The cosmic cards have been shuffled by Jupiter's divine energy ✨\n\n` +
+      `🌙 ${drawnCards[0].position}: **${drawnCards[0].card.name}**${drawnCards[0].isReversed ? ' (Reversed)' : ''}\n` +
+      `   _${drawnCards[0].isReversed ? drawnCards[0].card.reversed.meaning : drawnCards[0].card.upright.meaning}_\n\n` +
+      `⚡ ${drawnCards[1].position}: **${drawnCards[1].card.name}**${drawnCards[1].isReversed ? ' (Reversed)' : ''}\n` +
+      `   _${drawnCards[1].isReversed ? drawnCards[1].card.reversed.meaning : drawnCards[1].card.upright.meaning}_\n\n` +
+      `⭐ ${drawnCards[2].position}: **${drawnCards[2].card.name}**${drawnCards[2].isReversed ? ' (Reversed)' : ''}\n` +
+      `   _${drawnCards[2].isReversed ? drawnCards[2].card.reversed.meaning : drawnCards[2].card.upright.meaning}_`;
 
     if (isLoveQuestion) {
       const loveInterpretation = generateLoveInterpretation(drawnCards);
-      return `💕 The cards reveal insights about your heart's journey...\n\n${loveInterpretation}${cardSpreadText}\n\nLove flows like a river - sometimes gentle, sometimes turbulent, but always moving toward its destined course. Trust in the timing of your heart. 💖✨`;
+      return `💕 Jupiter's cosmic love energies swirl around your heart's desire...\n\n${loveInterpretation}${cardSpreadText}\n\n✨ Remember, dear soul, love flows like the celestial rivers - sometimes gentle, sometimes turbulent, but always guided by Jupiter's benevolent wisdom. Trust in divine timing and let your heart be your compass. 💖🌟`;
     }
     
     if (isCareerQuestion) {
       const careerInterpretation = generateCareerInterpretation(drawnCards);
-      return `💼 The universe speaks of your professional path...\n\n${careerInterpretation}${cardSpreadText}\n\nSuccess is not just about reaching the destination, but about who you become on the journey. The cards guide you toward your highest potential. 🌟💫`;
+      return `💼 The planetary alignments speak of your professional destiny...\n\n${careerInterpretation}${cardSpreadText}\n\n🌟 Jupiter, the planet of expansion and abundance, reminds you that true success comes not just from reaching your destination, but from the wisdom gained on your journey. The universe conspires to elevate your highest potential. ✨💫`;
     }
     
     if (isSpiritualQuestion) {
       const spiritualInterpretation = generateSpiritualInterpretation(drawnCards);
-      return `🔮 Your soul seeks deeper understanding...\n\n${spiritualInterpretation}${cardSpreadText}\n\nThe spiritual path is not about perfection, but about awakening to your true nature. Each step brings you closer to enlightenment. 🙏✨`;
+      return `🔮 Your soul's light calls out to the cosmic consciousness...\n\n${spiritualInterpretation}${cardSpreadText}\n\n🙏 The spiritual path illuminated by Jupiter's wisdom shows that enlightenment is not a destination but a continuous awakening. Each breath, each moment, brings you closer to your divine essence. Trust the journey, beautiful soul. ✨🌙`;
     }
     
     if (isFutureQuestion) {
       const futureInterpretation = generateFutureInterpretation(drawnCards);
-      return `🌟 The threads of time weave your destiny...\n\n${futureInterpretation}${cardSpreadText}\n\nRemember, the future is not set in stone but shaped by your choices and intentions. Use this guidance to create the path you desire. 🌙🔮`;
+      return `🌟 The threads of destiny weave through Jupiter's cosmic tapestry...\n\n${futureInterpretation}${cardSpreadText}\n\n🔮 Remember, precious seeker, the future is not carved in stone but painted with the brushstrokes of your choices and intentions. Jupiter's guidance shows you the path, but you hold the power to walk it. Create your destiny with conscious intention. 🌙✨`;
     }
 
     if (isGeneralQuestion || reading) {
       const generalInterpretation = generateGeneralInterpretation(drawnCards);
-      return `✨ The cosmic forces align to bring you guidance...\n\n${generalInterpretation}${cardSpreadText}\n\nThe universe speaks in symbols and synchronicities. Trust your intuition as you interpret these messages. 🌟🔮`;
+      return `✨ Jupiter's infinite wisdom flows through the cosmic channels...\n\n${generalInterpretation}${cardSpreadText}\n\n🌟 The universe speaks in sacred symbols and divine synchronicities. Trust your intuition as Jupiter's energy guides you to interpret these celestial messages. You are more powerful and wise than you know. 🔮💫`;
     }
     
     // Default mystical responses with card shuffle
-    const defaultInterpretation = generateGeneralInterpretation(drawnCards);
+    const generalInterpretation = generateGeneralInterpretation(drawnCards);
     const defaultResponses = [
-      `🌙 The mystical energies swirl around your question...\n\n${defaultInterpretation}${cardSpreadText}\n\nEvery question carries the seed of its own answer. The cards merely illuminate what your soul already knows. ✨`,
-      `🔮 The ancient wisdom flows through these sacred cards...\n\n${defaultInterpretation}${cardSpreadText}\n\nTrust in the divine timing of your journey. The universe conspires to guide you toward your highest good. 🌟`,
-      `✨ The veil between worlds grows thin as the cards speak...\n\n${defaultInterpretation}${cardSpreadText}\n\nYour question resonates with cosmic truth. Let these insights illuminate your path forward. 🌙💫`,
+      `🌙 Jupiter's mystical energies dance around your sacred question...\n\n${generalInterpretation}${cardSpreadText}\n\n✨ Every question you ask carries the seed of divine wisdom within it. The cards merely illuminate what your soul already knows. Trust in Jupiter's guidance and your own inner knowing. 🌟`,
+      `🔮 The ancient wisdom of Jupiter flows through these sacred cards...\n\n${generalInterpretation}${cardSpreadText}\n\n🌟 Jupiter's benevolent energy reminds you to trust in the divine timing of your journey. The universe conspires to guide you toward your highest good and greatest joy. 💫`,
+      `✨ The veil between worlds grows thin as Jupiter's cards speak...\n\n${generalInterpretation}${cardSpreadText}\n\n🌙 Your question resonates with cosmic truth and divine purpose. Let these insights from Jupiter's realm illuminate your path forward with love, wisdom, and infinite possibility. 🔮💖`,
     ];
     
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
@@ -137,7 +171,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
     const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return `Your romantic journey shows ${pastMeaning.toLowerCase()} in your past experiences, which has shaped your current emotional state. Presently, ${presentMeaning.toLowerCase()} influences your heart's desires and actions. Looking ahead, ${futureMeaning.toLowerCase()} suggests the direction your love life is heading.`;
+    return `Your heart's journey reveals that ${pastMeaning.toLowerCase()} has shaped your romantic foundation, creating the emotional landscape you navigate today. In this present moment, ${presentMeaning.toLowerCase()} influences your heart's desires and the love energy you're radiating into the universe. Jupiter's cosmic love forecast shows ${futureMeaning.toLowerCase()} guiding your romantic destiny, promising beautiful transformations in your love life.`;
   };
 
   const generateCareerInterpretation = (cards: DrawnCard[]): string => {
@@ -149,7 +183,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
     const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return `Your professional path reveals ${pastMeaning.toLowerCase()} as the foundation of your career journey. Currently, ${presentMeaning.toLowerCase()} guides your work-related decisions and opportunities. The future holds ${futureMeaning.toLowerCase()}, indicating the trajectory of your professional growth.`;
+    return `Your professional journey shows that ${pastMeaning.toLowerCase()} has been the cornerstone of your career development, building the foundation for your current success. Presently, ${presentMeaning.toLowerCase()} guides your work-related decisions and opens doors to new opportunities. Jupiter's abundance energy reveals ${futureMeaning.toLowerCase()} as the trajectory of your professional expansion and material prosperity.`;
   };
 
   const generateSpiritualInterpretation = (cards: DrawnCard[]): string => {
@@ -161,7 +195,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
     const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return `Your spiritual evolution shows ${pastMeaning.toLowerCase()} as the catalyst for your awakening. In this moment, ${presentMeaning.toLowerCase()} illuminates your current spiritual practice and growth. Your soul's future path reveals ${futureMeaning.toLowerCase()}, guiding you toward deeper enlightenment.`;
+    return `Your soul's evolution reveals that ${pastMeaning.toLowerCase()} has been the catalyst for your spiritual awakening, igniting the divine spark within you. In this sacred moment, ${presentMeaning.toLowerCase()} illuminates your current spiritual practice and guides your connection to the divine. Jupiter's spiritual wisdom shows ${futureMeaning.toLowerCase()} as your path toward deeper enlightenment and cosmic consciousness.`;
   };
 
   const generateFutureInterpretation = (cards: DrawnCard[]): string => {
@@ -173,7 +207,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
     const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return `The tapestry of time shows ${pastMeaning.toLowerCase()} as the foundation influencing your future. Your present actions, guided by ${presentMeaning.toLowerCase()}, are weaving the threads of tomorrow. The future unfolds with ${futureMeaning.toLowerCase()}, revealing the potential outcomes of your current path.`;
+    return `The cosmic tapestry of time reveals that ${pastMeaning.toLowerCase()} has been weaving the threads of your destiny, creating the foundation for what's to come. Your present actions, guided by ${presentMeaning.toLowerCase()}, are actively shaping tomorrow's reality. Jupiter's prophetic vision shows ${futureMeaning.toLowerCase()} as the beautiful manifestation of your current path and intentions.`;
   };
 
   const generateGeneralInterpretation = (cards: DrawnCard[]): string => {
@@ -185,7 +219,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
     const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return `The cosmic energies reveal ${pastMeaning.toLowerCase()} as the influence from your past that shapes your current situation. Presently, ${presentMeaning.toLowerCase()} guides your path and decisions. Moving forward, ${futureMeaning.toLowerCase()} illuminates the potential that awaits you.`;
+    return `Jupiter's cosmic wisdom reveals that ${pastMeaning.toLowerCase()} has been the guiding influence from your past, shaping your current reality and perspective. In this present moment, ${presentMeaning.toLowerCase()} flows through your life, directing your path and illuminating your choices. Moving forward with Jupiter's blessing, ${futureMeaning.toLowerCase()} awaits you as the beautiful potential that your soul is ready to embrace.`;
   };
 
   const renderBubble = (props: any) => {
@@ -195,15 +229,23 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
         wrapperStyle={{
           right: {
             backgroundColor: colors.chatBubbleUser,
-            borderRadius: 20,
-            marginVertical: 4,
+            borderRadius: 24,
+            marginVertical: 6,
+            paddingHorizontal: 4,
+            paddingVertical: 2,
+            boxShadow: '0px 4px 12px rgba(255, 110, 199, 0.3)',
+            elevation: 4,
           },
           left: {
             backgroundColor: colors.chatBubbleBot,
-            borderRadius: 20,
-            marginVertical: 4,
+            borderRadius: 24,
+            marginVertical: 6,
+            paddingHorizontal: 4,
+            paddingVertical: 2,
             borderWidth: 1,
             borderColor: colors.glassBorder,
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
+            elevation: 4,
           },
         }}
         textStyle={{
@@ -211,11 +253,17 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
             color: colors.text,
             fontFamily: 'Inter_400Regular',
             fontSize: 16,
+            lineHeight: 22,
+            paddingHorizontal: 8,
+            paddingVertical: 4,
           },
           left: {
             color: colors.text,
             fontFamily: 'Inter_400Regular',
             fontSize: 16,
+            lineHeight: 22,
+            paddingHorizontal: 8,
+            paddingVertical: 4,
           },
         }}
       />
@@ -229,6 +277,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
         containerStyle={styles.inputToolbar}
         primaryStyle={styles.inputPrimary}
         textInputStyle={styles.textInput}
+        placeholder="Ask Jupiter's Oracle anything..."
       />
     );
   };
@@ -237,7 +286,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     return (
       <Send {...props}>
         <View style={styles.sendButton}>
-          <Ionicons name="send" size={20} color={colors.text} />
+          <Ionicons name="send" size={22} color={colors.text} />
         </View>
       </Send>
     );
@@ -250,21 +299,30 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     >
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
-        <View style={[glassStyles.overlay, styles.header]}>
+        <View style={[glassStyles.iosBlur, styles.header]}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Ionicons name="arrow-back" size={24} color={colors.accent} />
+            <Ionicons name="arrow-back" size={26} color={colors.accent} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Mystic Chat</Text>
+          <View style={styles.headerCenter}>
+            <Text style={styles.headerTitle}>Jupiter's Oracle</Text>
+            <Text style={styles.headerSubtitle}>Cosmic Guidance</Text>
+          </View>
           <View style={styles.headerIcon}>
             <Text style={styles.crystalBall}>🔮</Text>
           </View>
         </View>
 
+        {/* Chat History Button */}
+        <TouchableOpacity style={[glassStyles.card, styles.historyButton]}>
+          <Ionicons name="time-outline" size={20} color={colors.accent} />
+          <Text style={styles.historyText}>Chat History ({chatHistory.length})</Text>
+        </TouchableOpacity>
+
         {/* Chat */}
         <KeyboardAvoidingView 
           style={styles.chatContainer}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         >
           <GiftedChat
             messages={messages}
@@ -275,10 +333,12 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
             renderBubble={renderBubble}
             renderInputToolbar={renderInputToolbar}
             renderSend={renderSend}
-            placeholder="Ask the cards anything..."
+            placeholder="Ask Jupiter's Oracle anything..."
             alwaysShowSend
             scrollToBottom
             infiniteScroll
+            showUserAvatar={false}
+            showAvatarForEveryMessage={true}
           />
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -297,58 +357,89 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    marginHorizontal: 16,
-    marginTop: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    marginHorizontal: 20,
+    marginTop: 12,
   },
   backButton: {
-    padding: 8,
+    padding: 10,
+  },
+  headerCenter: {
+    alignItems: 'center',
+    flex: 1,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
     color: colors.text,
     fontFamily: 'CormorantGaramond_600SemiBold',
   },
+  headerSubtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    fontFamily: 'Inter_400Regular',
+    marginTop: 2,
+  },
   headerIcon: {
-    padding: 8,
+    padding: 10,
   },
   crystalBall: {
-    fontSize: 24,
+    fontSize: 28,
+  },
+  historyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    marginBottom: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  historyText: {
+    color: colors.text,
+    fontSize: 16,
+    fontFamily: 'Inter_500Medium',
+    marginLeft: 8,
   },
   chatContainer: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   inputToolbar: {
     backgroundColor: colors.glass,
     borderTopWidth: 1,
     borderTopColor: colors.glassBorder,
-    borderRadius: 25,
-    marginHorizontal: 8,
-    marginVertical: 8,
-    paddingHorizontal: 8,
+    borderRadius: 28,
+    marginHorizontal: 12,
+    marginVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.3)',
+    elevation: 6,
   },
   inputPrimary: {
     alignItems: 'center',
   },
   textInput: {
     color: colors.chatInputText,
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'Inter_400Regular',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    lineHeight: 24,
   },
   sendButton: {
     backgroundColor: colors.accent,
-    borderRadius: 20,
-    width: 40,
-    height: 40,
+    borderRadius: 24,
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 8,
     marginBottom: 8,
+    boxShadow: '0px 4px 12px rgba(255, 110, 199, 0.4)',
+    elevation: 6,
   },
 });
