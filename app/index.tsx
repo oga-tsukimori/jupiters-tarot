@@ -83,7 +83,7 @@ export default function TarotApp() {
   };
 
   const renderFloatingChatButton = () => {
-    if (appState === 'chat') return null;
+    if (appState === 'chat' || appState === 'welcome') return null;
     
     return (
       <TouchableOpacity
@@ -91,62 +91,53 @@ export default function TarotApp() {
         onPress={handleOpenChat}
         activeOpacity={0.8}
       >
-        <Ionicons name="chatbubble-ellipses" size={24} color={colors.primary} />
+        <Ionicons name="chatbubble-ellipses" size={24} color={colors.text} />
       </TouchableOpacity>
     );
   };
 
   const renderWelcomeScreen = () => (
     <LinearGradient
-      colors={[colors.background, colors.primary]}
+      colors={[colors.gradient1, colors.gradient2, colors.gradient3]}
       style={styles.gradientContainer}
     >
       <SafeAreaView style={commonStyles.container}>
         <View style={commonStyles.centerContent}>
           <View style={styles.welcomeContent}>
-            <Text style={styles.appTitle}>Mystic Tarot</Text>
+            <Text style={styles.appTitle}>✨ Mystic Tarot ✨</Text>
             <Text style={styles.appSubtitle}>
               Discover the wisdom of the cards
             </Text>
             
             <View style={styles.mysticalSymbols}>
-              <Text style={styles.symbol}>✦</Text>
-              <Text style={styles.symbol}>✧</Text>
-              <Text style={styles.symbol}>✦</Text>
+              <Text style={styles.symbol}>🌙</Text>
+              <Text style={styles.symbol}>🔮</Text>
+              <Text style={styles.symbol}>⭐</Text>
             </View>
 
             <View style={[glassStyles.container, styles.welcomeCard]}>
               <Text style={styles.welcomeText}>
                 Welcome to your personal tarot reading experience. 
-                Let the ancient wisdom guide your path forward.
+                Let the ancient wisdom guide your path forward through the mystical realm of cards.
               </Text>
             </View>
 
             <Button
-              text="Begin Reading"
+              text="Begin Your Journey"
               onPress={handleStartReading}
               variant="primary"
               size="large"
               style={styles.startButton}
             />
-
-            <Button
-              text="Chat with Mystic Guide"
-              onPress={handleOpenChat}
-              variant="glass"
-              size="medium"
-              style={styles.chatButton}
-            />
           </View>
         </View>
-        {renderFloatingChatButton()}
       </SafeAreaView>
     </LinearGradient>
   );
 
   const renderSpreadsScreen = () => (
     <LinearGradient
-      colors={[colors.background, colors.primary]}
+      colors={[colors.gradient1, colors.gradient2, colors.gradient3]}
       style={styles.gradientContainer}
     >
       <SafeAreaView style={commonStyles.container}>
@@ -168,7 +159,7 @@ export default function TarotApp() {
 
   const renderReadingScreen = () => (
     <LinearGradient
-      colors={[colors.background, colors.primary]}
+      colors={[colors.gradient1, colors.gradient2, colors.gradient3]}
       style={styles.gradientContainer}
     >
       <SafeAreaView style={commonStyles.container}>
@@ -238,8 +229,7 @@ const styles = StyleSheet.create({
   },
   symbol: {
     fontSize: 32,
-    color: colors.accent,
-    opacity: 0.8,
+    opacity: 0.9,
   },
   welcomeCard: {
     marginBottom: 32,
@@ -254,9 +244,6 @@ const styles = StyleSheet.create({
   },
   startButton: {
     marginBottom: 16,
-    minWidth: 200,
-  },
-  chatButton: {
     minWidth: 200,
   },
   spreadsHeader: {

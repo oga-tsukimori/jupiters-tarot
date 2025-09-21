@@ -26,8 +26,8 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
       {
         _id: 1,
         text: currentReading 
-          ? `I can see you've drawn cards for a ${currentReading.spread} reading. What would you like to know about your cards?`
-          : 'Welcome to your mystical chat! Ask me anything about tarot, your readings, or seek guidance from the cards.',
+          ? `I can see you've drawn cards for a ${currentReading.spread} reading. What would you like to know about your cards? ✨`
+          : 'Welcome to your mystical chat! Ask me anything about tarot, your readings, or seek guidance from the cards. 🔮✨',
         createdAt: new Date(),
         user: {
           _id: 2,
@@ -42,10 +42,10 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     console.log('Sending message:', newMessages[0].text);
     setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages));
     
-    // Generate AI response
+    // Generate AI response with card shuffling
     setTimeout(() => {
       const userMessage = newMessages[0].text.toLowerCase();
-      const response = generateTarotResponse(userMessage, currentReading);
+      const response = generateTarotResponseWithShuffle(userMessage, currentReading);
       
       const botMessage: IMessage = {
         _id: Math.round(Math.random() * 1000000),
@@ -62,127 +62,130 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     }, 1000 + Math.random() * 2000); // Random delay for more natural feel
   }, [currentReading]);
 
-  const generateTarotResponse = (userMessage: string, reading?: { spread: SpreadType; cards: DrawnCard[] }): string => {
-    console.log('Generating response for:', userMessage);
+  const generateTarotResponseWithShuffle = (userMessage: string, reading?: { spread: SpreadType; cards: DrawnCard[] }): string => {
+    console.log('Generating response with card shuffle for:', userMessage);
     
+    // Shuffle cards and draw new ones for the answer
+    const shuffledCards = getRandomCards(3); // Draw 3 cards for the answer
+    const drawnCards: DrawnCard[] = shuffledCards.map((card, index) => ({
+      card,
+      position: ['Past/Situation', 'Present/Action', 'Future/Outcome'][index],
+      isReversed: Math.random() < 0.3, // 30% chance of reversed
+    }));
+
     // Keywords for different types of questions
-    const loveKeywords = ['love', 'relationship', 'romance', 'partner', 'heart', 'dating'];
-    const careerKeywords = ['career', 'job', 'work', 'money', 'finance', 'business', 'success'];
-    const spiritualKeywords = ['spiritual', 'growth', 'meditation', 'chakra', 'energy', 'soul'];
-    const futureKeywords = ['future', 'tomorrow', 'next', 'will', 'going to', 'predict'];
+    const loveKeywords = ['love', 'relationship', 'romance', 'partner', 'heart', 'dating', 'crush', 'marriage'];
+    const careerKeywords = ['career', 'job', 'work', 'money', 'finance', 'business', 'success', 'promotion'];
+    const spiritualKeywords = ['spiritual', 'growth', 'meditation', 'chakra', 'energy', 'soul', 'purpose', 'enlightenment'];
+    const futureKeywords = ['future', 'tomorrow', 'next', 'will', 'going to', 'predict', 'what happens'];
+    const generalKeywords = ['help', 'advice', 'guidance', 'what should', 'how can', 'tell me'];
     
     const isLoveQuestion = loveKeywords.some(keyword => userMessage.includes(keyword));
     const isCareerQuestion = careerKeywords.some(keyword => userMessage.includes(keyword));
     const isSpiritualQuestion = spiritualKeywords.some(keyword => userMessage.includes(keyword));
     const isFutureQuestion = futureKeywords.some(keyword => userMessage.includes(keyword));
-    
-    if (reading && reading.cards.length > 0) {
-      const firstCard = reading.cards[0];
-      const cardName = firstCard.card.name;
-      const isReversed = firstCard.isReversed;
-      const meaning = isReversed ? firstCard.card.reversed.meaning : firstCard.card.upright.meaning;
-      
-      if (isLoveQuestion) {
-        return `Looking at your ${cardName}${isReversed ? ' (reversed)' : ''}, I see ${meaning.toLowerCase()}. In matters of the heart, this suggests ${generateLoveAdvice(cardName, isReversed)}. The cards whisper of emotional currents that flow through your romantic sphere. ✨💕`;
-      }
-      
-      if (isCareerQuestion) {
-        return `Your ${cardName}${isReversed ? ' (reversed)' : ''} reveals ${meaning.toLowerCase()}. For your career path, this indicates ${generateCareerAdvice(cardName, isReversed)}. The universe aligns opportunities with your professional journey. 🌟💼`;
-      }
-      
-      if (isSpiritualQuestion) {
-        return `The ${cardName}${isReversed ? ' (reversed)' : ''} speaks of ${meaning.toLowerCase()}. On your spiritual journey, this card illuminates ${generateSpiritualAdvice(cardName, isReversed)}. Your soul seeks deeper understanding through this cosmic message. 🔮✨`;
-      }
-      
-      return `Your ${cardName}${isReversed ? ' (reversed)' : ''} carries the energy of ${meaning.toLowerCase()}. This card suggests ${generateGeneralAdvice(cardName, isReversed)}. Trust in the wisdom the cards have revealed to you. 🌙✨`;
-    }
-    
-    // General responses without specific reading
-    if (isFutureQuestion) {
-      return "The future is a tapestry woven by your choices and the cosmic forces around you. While I cannot predict exact events, I can help you understand the energies at play. Would you like me to draw some cards to illuminate your path forward? 🔮✨";
-    }
-    
+    const isGeneralQuestion = generalKeywords.some(keyword => userMessage.includes(keyword));
+
+    // Create the card spread description
+    const cardSpreadText = `\n\n🃏 The cards have been shuffled and speak:\n\n` +
+      `🌙 ${drawnCards[0].position}: ${drawnCards[0].card.name}${drawnCards[0].isReversed ? ' (Reversed)' : ''}\n` +
+      `✨ ${drawnCards[1].position}: ${drawnCards[1].card.name}${drawnCards[1].isReversed ? ' (Reversed)' : ''}\n` +
+      `⭐ ${drawnCards[2].position}: ${drawnCards[2].card.name}${drawnCards[2].isReversed ? ' (Reversed)' : ''}`;
+
     if (isLoveQuestion) {
-      return "Matters of the heart are complex and beautiful. Love flows like a river, sometimes calm, sometimes turbulent. The cards can offer insight into your romantic energies. Shall we explore what the universe has to say about your love life? 💕🌹";
+      const loveInterpretation = generateLoveInterpretation(drawnCards);
+      return `💕 The cards reveal insights about your heart's journey...\n\n${loveInterpretation}${cardSpreadText}\n\nLove flows like a river - sometimes gentle, sometimes turbulent, but always moving toward its destined course. Trust in the timing of your heart. 💖✨`;
     }
     
     if (isCareerQuestion) {
-      return "Your professional path is guided by both ambition and cosmic timing. Success comes to those who align their actions with universal flow. The cards can reveal hidden opportunities and challenges in your career. Would you like guidance on your professional journey? 💼⭐";
+      const careerInterpretation = generateCareerInterpretation(drawnCards);
+      return `💼 The universe speaks of your professional path...\n\n${careerInterpretation}${cardSpreadText}\n\nSuccess is not just about reaching the destination, but about who you become on the journey. The cards guide you toward your highest potential. 🌟💫`;
     }
     
-    // Default mystical responses
+    if (isSpiritualQuestion) {
+      const spiritualInterpretation = generateSpiritualInterpretation(drawnCards);
+      return `🔮 Your soul seeks deeper understanding...\n\n${spiritualInterpretation}${cardSpreadText}\n\nThe spiritual path is not about perfection, but about awakening to your true nature. Each step brings you closer to enlightenment. 🙏✨`;
+    }
+    
+    if (isFutureQuestion) {
+      const futureInterpretation = generateFutureInterpretation(drawnCards);
+      return `🌟 The threads of time weave your destiny...\n\n${futureInterpretation}${cardSpreadText}\n\nRemember, the future is not set in stone but shaped by your choices and intentions. Use this guidance to create the path you desire. 🌙🔮`;
+    }
+
+    if (isGeneralQuestion || reading) {
+      const generalInterpretation = generateGeneralInterpretation(drawnCards);
+      return `✨ The cosmic forces align to bring you guidance...\n\n${generalInterpretation}${cardSpreadText}\n\nThe universe speaks in symbols and synchronicities. Trust your intuition as you interpret these messages. 🌟🔮`;
+    }
+    
+    // Default mystical responses with card shuffle
+    const defaultInterpretation = generateGeneralInterpretation(drawnCards);
     const defaultResponses = [
-      "The cosmic energies swirl around your question. Each soul's journey is unique, and the cards speak differently to each seeker. What specific aspect of your life would you like the cards to illuminate? 🌟",
-      "I sense deep wisdom in your inquiry. The universe communicates through symbols and synchronicities. The tarot cards are one such language of the divine. How may I help you decode the messages meant for you? ✨",
-      "Your question resonates with ancient wisdom. The cards have guided seekers for centuries, offering glimpses into the hidden currents of fate and free will. What guidance do you seek from the mystical realm? 🔮",
-      "The veil between worlds grows thin when we seek truth. Your question carries the weight of genuine seeking. The cards respond to sincere hearts. What area of your life calls for illumination? 🌙",
+      `🌙 The mystical energies swirl around your question...\n\n${defaultInterpretation}${cardSpreadText}\n\nEvery question carries the seed of its own answer. The cards merely illuminate what your soul already knows. ✨`,
+      `🔮 The ancient wisdom flows through these sacred cards...\n\n${defaultInterpretation}${cardSpreadText}\n\nTrust in the divine timing of your journey. The universe conspires to guide you toward your highest good. 🌟`,
+      `✨ The veil between worlds grows thin as the cards speak...\n\n${defaultInterpretation}${cardSpreadText}\n\nYour question resonates with cosmic truth. Let these insights illuminate your path forward. 🌙💫`,
     ];
     
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   };
 
-  const generateLoveAdvice = (cardName: string, isReversed: boolean): string => {
-    const loveAdvice = [
-      "a time of emotional growth and deeper connection awaits",
-      "patience in love will be rewarded with genuine affection",
-      "your heart is opening to new possibilities in romance",
-      "trust your intuition when it comes to matters of love",
-      "communication is key to resolving relationship challenges"
-    ];
+  const generateLoveInterpretation = (cards: DrawnCard[]): string => {
+    const pastCard = cards[0];
+    const presentCard = cards[1];
+    const futureCard = cards[2];
     
-    if (isReversed) {
-      return "some emotional healing may be needed before love can fully bloom";
-    }
+    const pastMeaning = pastCard.isReversed ? pastCard.card.reversed.meaning : pastCard.card.upright.meaning;
+    const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
+    const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return loveAdvice[Math.floor(Math.random() * loveAdvice.length)];
+    return `Your romantic journey shows ${pastMeaning.toLowerCase()} in your past experiences, which has shaped your current emotional state. Presently, ${presentMeaning.toLowerCase()} influences your heart's desires and actions. Looking ahead, ${futureMeaning.toLowerCase()} suggests the direction your love life is heading.`;
   };
 
-  const generateCareerAdvice = (cardName: string, isReversed: boolean): string => {
-    const careerAdvice = [
-      "new opportunities are on the horizon for professional growth",
-      "your hard work and dedication will soon bear fruit",
-      "collaboration with others will lead to success",
-      "trust your skills and take calculated risks",
-      "a period of learning and skill development approaches"
-    ];
+  const generateCareerInterpretation = (cards: DrawnCard[]): string => {
+    const pastCard = cards[0];
+    const presentCard = cards[1];
+    const futureCard = cards[2];
     
-    if (isReversed) {
-      return "some obstacles in your career path require patience and strategic thinking";
-    }
+    const pastMeaning = pastCard.isReversed ? pastCard.card.reversed.meaning : pastCard.card.upright.meaning;
+    const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
+    const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return careerAdvice[Math.floor(Math.random() * careerAdvice.length)];
+    return `Your professional path reveals ${pastMeaning.toLowerCase()} as the foundation of your career journey. Currently, ${presentMeaning.toLowerCase()} guides your work-related decisions and opportunities. The future holds ${futureMeaning.toLowerCase()}, indicating the trajectory of your professional growth.`;
   };
 
-  const generateSpiritualAdvice = (cardName: string, isReversed: boolean): string => {
-    const spiritualAdvice = [
-      "a deeper connection to your inner wisdom is emerging",
-      "meditation and reflection will bring clarity to your path",
-      "your spiritual gifts are awakening and need nurturing",
-      "the universe is guiding you toward your higher purpose",
-      "balance between material and spiritual worlds is needed"
-    ];
+  const generateSpiritualInterpretation = (cards: DrawnCard[]): string => {
+    const pastCard = cards[0];
+    const presentCard = cards[1];
+    const futureCard = cards[2];
     
-    if (isReversed) {
-      return "some spiritual blockages need clearing before progress can be made";
-    }
+    const pastMeaning = pastCard.isReversed ? pastCard.card.reversed.meaning : pastCard.card.upright.meaning;
+    const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
+    const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return spiritualAdvice[Math.floor(Math.random() * spiritualAdvice.length)];
+    return `Your spiritual evolution shows ${pastMeaning.toLowerCase()} as the catalyst for your awakening. In this moment, ${presentMeaning.toLowerCase()} illuminates your current spiritual practice and growth. Your soul's future path reveals ${futureMeaning.toLowerCase()}, guiding you toward deeper enlightenment.`;
   };
 
-  const generateGeneralAdvice = (cardName: string, isReversed: boolean): string => {
-    const generalAdvice = [
-      "a time of transformation and positive change is approaching",
-      "trust in your inner strength to overcome current challenges",
-      "new perspectives will illuminate your path forward",
-      "balance and harmony are needed in your current situation",
-      "the universe is aligning circumstances in your favor"
-    ];
+  const generateFutureInterpretation = (cards: DrawnCard[]): string => {
+    const pastCard = cards[0];
+    const presentCard = cards[1];
+    const futureCard = cards[2];
     
-    if (isReversed) {
-      return "some inner work and reflection will help you move forward";
-    }
+    const pastMeaning = pastCard.isReversed ? pastCard.card.reversed.meaning : pastCard.card.upright.meaning;
+    const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
+    const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
     
-    return generalAdvice[Math.floor(Math.random() * generalAdvice.length)];
+    return `The tapestry of time shows ${pastMeaning.toLowerCase()} as the foundation influencing your future. Your present actions, guided by ${presentMeaning.toLowerCase()}, are weaving the threads of tomorrow. The future unfolds with ${futureMeaning.toLowerCase()}, revealing the potential outcomes of your current path.`;
+  };
+
+  const generateGeneralInterpretation = (cards: DrawnCard[]): string => {
+    const pastCard = cards[0];
+    const presentCard = cards[1];
+    const futureCard = cards[2];
+    
+    const pastMeaning = pastCard.isReversed ? pastCard.card.reversed.meaning : pastCard.card.upright.meaning;
+    const presentMeaning = presentCard.isReversed ? presentCard.card.reversed.meaning : presentCard.card.upright.meaning;
+    const futureMeaning = futureCard.isReversed ? futureCard.card.reversed.meaning : futureCard.card.upright.meaning;
+    
+    return `The cosmic energies reveal ${pastMeaning.toLowerCase()} as the influence from your past that shapes your current situation. Presently, ${presentMeaning.toLowerCase()} guides your path and decisions. Moving forward, ${futureMeaning.toLowerCase()} illuminates the potential that awaits you.`;
   };
 
   const renderBubble = (props: any) => {
@@ -205,7 +208,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
         }}
         textStyle={{
           right: {
-            color: colors.primary,
+            color: colors.text,
             fontFamily: 'Inter_400Regular',
             fontSize: 16,
           },
@@ -225,6 +228,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
         {...props}
         containerStyle={styles.inputToolbar}
         primaryStyle={styles.inputPrimary}
+        textInputStyle={styles.textInput}
       />
     );
   };
@@ -233,7 +237,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
     return (
       <Send {...props}>
         <View style={styles.sendButton}>
-          <Ionicons name="send" size={20} color={colors.primary} />
+          <Ionicons name="send" size={20} color={colors.text} />
         </View>
       </Send>
     );
@@ -241,7 +245,7 @@ export default function ChatScreen({ onBack, currentReading }: ChatScreenProps) 
 
   return (
     <LinearGradient
-      colors={[colors.background, colors.primary]}
+      colors={[colors.gradient1, colors.gradient2, colors.gradient3]}
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
@@ -329,6 +333,13 @@ const styles = StyleSheet.create({
   },
   inputPrimary: {
     alignItems: 'center',
+  },
+  textInput: {
+    color: colors.chatInputText,
+    fontSize: 16,
+    fontFamily: 'Inter_400Regular',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   sendButton: {
     backgroundColor: colors.accent,

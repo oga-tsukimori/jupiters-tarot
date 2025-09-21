@@ -2,24 +2,26 @@
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 export const colors = {
-  primary: '#1a0d2e',      // Deep mystical purple
-  secondary: '#16213e',    // Dark blue-purple
-  accent: '#e8b86d',       // Golden accent
-  background: '#0f0a1a',   // Very dark purple background
-  backgroundAlt: '#1a0d2e', // Slightly lighter dark purple
-  text: '#f5f1eb',         // Warm off-white
-  textSecondary: '#c9b99b', // Muted gold
-  grey: '#4a3c5c',         // Muted purple-grey
-  card: '#1e1535',         // Card background
-  cardBorder: '#2d1b4e',   // Card border
-  gold: '#d4af37',         // Pure gold
+  primary: '#4a148c',      // Deep magical purple
+  secondary: '#7b1fa2',    // Vibrant purple
+  accent: '#ff6ec7',       // Magical pink
+  background: '#1a0033',   // Very dark purple background
+  backgroundAlt: '#2d1b69', // Slightly lighter magical purple
+  text: '#ffffff',         // Pure white text
+  textSecondary: '#e1bee7', // Light purple text
+  grey: '#6a4c93',         // Muted purple-grey
+  card: '#2d1b69',         // Card background
+  cardBorder: '#4a148c',   // Card border
+  gold: '#ffd700',         // Pure gold
   silver: '#c0c0c0',       // Silver
-  gradient1: '#1a0d2e',    // Gradient start
-  gradient2: '#2d1b4e',    // Gradient end
-  glass: 'rgba(30, 21, 53, 0.8)', // Glass effect background
-  glassBorder: 'rgba(232, 184, 109, 0.2)', // Glass border
-  chatBubbleUser: '#e8b86d', // User chat bubble
-  chatBubbleBot: 'rgba(30, 21, 53, 0.9)', // Bot chat bubble
+  gradient1: '#1a0033',    // Gradient start - deep purple
+  gradient2: '#4a148c',    // Gradient middle - magical purple
+  gradient3: '#7b1fa2',    // Gradient end - bright purple
+  glass: 'rgba(45, 27, 105, 0.8)', // Glass effect background
+  glassBorder: 'rgba(255, 110, 199, 0.3)', // Glass border with magical pink
+  chatBubbleUser: '#ff6ec7', // User chat bubble - magical pink
+  chatBubbleBot: 'rgba(45, 27, 105, 0.9)', // Bot chat bubble
+  chatInputText: '#ffffff', // White text for chat input
 };
 
 export const buttonStyles = StyleSheet.create({
@@ -30,7 +32,7 @@ export const buttonStyles = StyleSheet.create({
     paddingHorizontal: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0px 8px 24px rgba(232, 184, 109, 0.4)',
+    boxShadow: '0px 8px 24px rgba(255, 110, 199, 0.4)',
     elevation: 8,
   },
   secondary: {
@@ -42,7 +44,7 @@ export const buttonStyles = StyleSheet.create({
     paddingHorizontal: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0px 4px 12px rgba(232, 184, 109, 0.2)',
+    boxShadow: '0px 4px 12px rgba(255, 110, 199, 0.2)',
     elevation: 4,
   },
   glass: {
@@ -83,7 +85,7 @@ export const buttonStyles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    boxShadow: '0px 8px 24px rgba(232, 184, 109, 0.4)',
+    boxShadow: '0px 8px 24px rgba(255, 110, 199, 0.4)',
     elevation: 8,
   },
 });
@@ -99,7 +101,7 @@ export const glassStyles = StyleSheet.create({
     elevation: 6,
   },
   overlay: {
-    backgroundColor: 'rgba(15, 10, 26, 0.7)',
+    backgroundColor: 'rgba(26, 0, 51, 0.7)',
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
